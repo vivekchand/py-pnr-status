@@ -19,9 +19,9 @@ def get_pnr_status(argv):
 
     def check_if_passengers_cnf(passengers):
         for passenger in passengers:
-            if passenger['status'] == 'CNF':
-                return True
-        return False
+            if passenger['status'] != 'CNF':
+                return False
+        return True
 
     def print_current_status(passengers):
         i = 1
