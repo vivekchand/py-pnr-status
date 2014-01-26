@@ -2,8 +2,13 @@ import sys
 import json
 import requests
 import time
+retry_interval = 10*60 #10 min
 
-def get_status(pnr_no):
+def get_pnr_status(argv):
+    if len(argv) != 2:
+        print 'Usage: python py_status.py <pnr-no>'
+        return
+    pnr_no = argv[1]
     resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
     resp = json.loads(resp.content)
     status = resp['status']
@@ -24,13 +29,13 @@ def get_status(pnr_no):
             print 'Passenger %s ' % i
             print 'Current Status: ' + passenger['status']
             i+=1
-
+    data['chart_prepared'] = False
     while not data['chart_prepared']:
-        if status == 'OK':
-            time.sleep(1)
         resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
         resp = json.loads(resp.content)
         status = resp['status']
+        if status != 'OK':
+            continue
         data = resp['data']
         passengers = data['passenger']
         if check_if_passengers_cnf(passengers):
@@ -38,6 +43,8 @@ def get_status(pnr_no):
         print 'Not confirmed yet ..'
         print 'Current status: '
         print_current_status(passengers)
+        print 'Trying again after time interval of %s sec' % retry_interval
+        time.sleep(retry_interval)
 
     print 'CONFIRMED!!!'
     print 'PNR No.:' +data['pnr_number']
@@ -45,6 +52,4 @@ def get_status(pnr_no):
     passengers = data['passenger']
     print_current_status(passengers)
 
-
-pnr_no = sys.argv[1]
-get_status(pnr_no)
+get_pnr_status(sys.argv)
