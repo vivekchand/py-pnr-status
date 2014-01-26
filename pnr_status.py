@@ -39,7 +39,7 @@ def get_status(pnr_no):
         print 'Current status: '
         print_current_status(passengers)
 
-
+    print 'CONFIRMED!!!'
     print 'PNR No.:' +data['pnr_number']
 
     passengers = data['passenger']
