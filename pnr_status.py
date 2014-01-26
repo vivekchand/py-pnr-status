@@ -29,7 +29,7 @@ def get_pnr_status(argv):
             print 'Passenger %s ' % i
             print 'Current Status: ' + passenger['status']
             i+=1
-    data['chart_prepared'] = False
+    
     while not data['chart_prepared']:
         resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
         resp = json.loads(resp.content)
