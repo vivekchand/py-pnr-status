@@ -10,7 +10,7 @@ python pnr_status.py 4159198222 10
 
 Sample Output:
 --------------
-CONFIRMED!!!
+Chart Prepared! PNR Status:
 PNR No.:4159198222
 Passenger 1 
 Current Status: CNF
@@ -18,8 +18,6 @@ Seat Number:S2 , 48,GN
 Passenger 2 
 Current Status: CNF
 Seat Number:S2 , 44,GN
-
-
 ```
 
 Todo:
