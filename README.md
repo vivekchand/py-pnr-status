@@ -14,8 +14,11 @@ CONFIRMED!!!
 PNR No.:4159198222
 Passenger 1 
 Current Status: CNF
+Seat Number:S2 , 48,GN
 Passenger 2 
 Current Status: CNF
+Seat Number:S2 , 44,GN
+
 
 ```
 
