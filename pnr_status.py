@@ -2,12 +2,18 @@ import sys
 import json
 import requests
 import time
-retry_interval = 10*60 #10 min
+default_retry_interval = 10*60 #10 min
 
 def get_pnr_status(argv):
-    if len(argv) != 2:
-        print 'Usage: python pnr_status.py <pnr-no>'
+    if len(argv) < 2:
+        print 'Usage: python pnr_status.py <pnr-no> [retry interval in min]'
         return
+
+    if len(argv) == 3:
+        retry_interval = int(argv[2])*60
+    else:
+        retry_interval = default_retry_interval
+
     pnr_no = argv[1]
     resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
     resp = json.loads(resp.content)
