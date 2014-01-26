@@ -34,6 +34,7 @@ def get_pnr_status(argv):
         for passenger in passengers:
             print 'Passenger %s ' % i
             print 'Current Status: ' + passenger['status']
+            print 'Seat Number:' + passenger['seat_number']
             i+=1
     
     while not data['chart_prepared']:
@@ -52,7 +53,7 @@ def get_pnr_status(argv):
         print 'Trying again after time interval of %s sec' % retry_interval
         time.sleep(retry_interval)
 
-    print 'CONFIRMED!!!'
+    print 'Chart Prepared! PNR Status:'
     print 'PNR No.:' +data['pnr_number']
 
     passengers = data['passenger']
