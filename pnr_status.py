@@ -6,7 +6,7 @@ retry_interval = 10*60 #10 min
 
 def get_pnr_status(argv):
     if len(argv) != 2:
-        print 'Usage: python py_status.py <pnr-no>'
+        print 'Usage: python pnr_status.py <pnr-no>'
         return
     pnr_no = argv[1]
     resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
