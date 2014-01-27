@@ -53,7 +53,10 @@ def get_pnr_status(argv):
         print 'Trying again after time interval of %s sec' % retry_interval
         time.sleep(retry_interval)
 
-    print 'Chart Prepared! PNR Status:'
+    if data['chart_prepared']:
+        print 'Chart Prepared! PNR Status:'
+    else:
+        print 'CONFIRMED! PNR Status:'
     print 'PNR No.:' +data['pnr_number']
 
     passengers = data['passenger']
