@@ -10,6 +10,7 @@ python pnr_status.py 4159198222 10
 
 Sample Output:
 --------------
+Checking PNR Status ...
 CONFIRMED! PNR Status:
 PNR No.:4159198222
 Passenger 1 
