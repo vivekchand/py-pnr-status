@@ -1,9 +1,8 @@
-
-py-pnr-status: [![Stories in Ready](https://badge.waffle.io/vivekchand/py-pnr-status.png?label=ready)](http://waffle.io/vivekchand/py-pnr-status)
+py-pnr-status [![Stories in Ready](https://badge.waffle.io/vivekchand/py-pnr-status.png?label=ready)](http://waffle.io/vivekchand/py-pnr-status)
 ==============
 
 Usage:
-======
+------
 ```
 python pnr_status.py <pnr-no> [retry interval in minutes]
 
@@ -25,7 +24,7 @@ Seat Number:S2 , 44,GN
 ```
 
 Todo:
-=====
+-----
 1. Send notification via email / sms when confirmed
 2. Make py-pnr-status easier to use (Installable)
 
