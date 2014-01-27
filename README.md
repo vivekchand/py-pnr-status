@@ -23,6 +23,6 @@ Seat Number:S2 , 44,GN
 Todo:
 =====
 1. Send notification via email / sms when confirmed
-
+2. Make py-pnr-status easier to use (Installable)
 
 
