@@ -1,6 +1,9 @@
-py-pnr-status Usage:
-====================
 
+py-pnr-status: [![Stories in Ready](https://badge.waffle.io/vivekchand/py-pnr-status.png?label=ready)](http://waffle.io/vivekchand/py-pnr-status)
+==============
+
+Usage:
+======
 ```
 python pnr_status.py <pnr-no> [retry interval in minutes]
 
