@@ -7,21 +7,26 @@ import getpass
 default_retry_interval = 10*60 #10 min
 
 def sendEmail(Message,emailId,passw):
-    #msg = 'test'
-    msg=Message
+    try:
+        subject = 'PNR Status'
+        msg = 'Subject: %s\n\n%s' % (subject, Message)
 
-    fromaddr=emailId
-    toaddrs=emailId
+        fromaddr=emailId
+        toaddrs=emailId
 
-    # Credentials (if needed)
-    password=passw
+        # Credentials (if needed)
+        password=passw
 
-    # The actual mail to be sent
-    server = smtplib.SMTP('smtp.gmail.com:587')
-    server.starttls()
-    server.login(fromaddr,password)
-    server.sendmail(fromaddr, toaddrs, msg)
-    server.quit()
+        # The actual mail to be sent
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(fromaddr,password)
+        print 'sending mail ...'
+        server.sendmail(fromaddr, toaddrs, msg)
+        print 'sent :)'
+        server.quit()
+    except smtplib.SMTPAuthenticationError, e:
+        print 'Invalid email or password'
 
 def get_pnr_status(argv,emailId,pas):
     if len(argv) < 2:
@@ -39,7 +44,11 @@ def get_pnr_status(argv,emailId,pas):
     resp = json.loads(resp.content)
     status = resp['status']
     data = resp['data']
-    if data == {} or status == "INVALID":
+    if data == {} and status == 'OK':
+        print 'Something went wrong real bad! Try again Later :)'
+        return
+
+    if status == "INVALID":
         print 'Invalid PNR Number!'
         return
 
@@ -65,7 +74,7 @@ def get_pnr_status(argv,emailId,pas):
             temp = temp + '------------'+'\n'
             i+=1
         return temp
-    
+
     while not data['chart_prepared']:
         resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
         resp = json.loads(resp.content)
@@ -81,25 +90,24 @@ def get_pnr_status(argv,emailId,pas):
         print_current_status(passengers)
         print 'Trying again after time interval of %s sec' % retry_interval
         time.sleep(retry_interval)
+        if(emailId!=''):
+            emailMsg = get_current_status(passengers)
+            sendEmail(emailMsg,emailId,passw)
 
     if data['chart_prepared']:
         print 'Chart Prepared! PNR Status:'
     else:
         print 'CONFIRMED! PNR Status:'
-        
-        passengers = data['passenger']
-        emailMsg = get_current_status(passengers)
-
-        if(emailId!=''):
-            print 'Sending Email ...'
-            sendEmail(emailMsg,emailId,passw)
-            print 'Email Sent.'
-
     print 'PNR No.:' +data['pnr_number']
 
     passengers = data['passenger']
     print_current_status(passengers)
-    
+
+    if(emailId!=''):
+        emailMsg = get_current_status(passengers)
+        sendEmail(emailMsg,emailId,passw)
+
+
 emailId=''
 passw=''
 
