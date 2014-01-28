@@ -90,18 +90,23 @@ def get_pnr_status(argv,emailId,pas):
         passengers = data['passenger']
         emailMsg = get_current_status(passengers)
 
-        print 'Sending Email ...'
-        sendEmail(emailMsg,emailId,passw)
-        print 'Email Sent.'
+        if(emailId!=''):
+            print 'Sending Email ...'
+            sendEmail(emailMsg,emailId,passw)
+            print 'Email Sent.'
 
     print 'PNR No.:' +data['pnr_number']
 
     passengers = data['passenger']
     print_current_status(passengers)
     
+emailId=''
+passw=''
 
-emailId=raw_input('Enter Email Address : ')
-passw=getpass.getpass()
+if(len(sys.argv)>=4):
+    temp=sys.argv[3]
+    emailId=temp[7:]
+    passw=getpass.getpass()
 
 get_pnr_status(sys.argv,emailId,passw)
 
