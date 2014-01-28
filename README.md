@@ -26,7 +26,8 @@ Seat Number:S2 , 44,GN
 Todo:
 -----
 1. Send notification via email / sms when confirmed
-2. Make py-pnr-status easier to use (Installable)
+2. Web App of py-pnr-status ( https://github.com/vivekchand/pypnrstatus.in )
+3. Make py-pnr-status easier to use (Installable)
 
 
 More feature suggestions can go here: https://github.com/vivekchand/py-pnr-status/issues/1
