@@ -32,3 +32,7 @@ Todo:
 
 More feature suggestions can go here: https://github.com/vivekchand/py-pnr-status/issues/1
 
+Thanks to:
+----------
+@sjs7007 ( sjs7007@gmail.com ) for email integration
+@manojmj92 ( manojmj92@gmail.com ) for ongoing sms integration
