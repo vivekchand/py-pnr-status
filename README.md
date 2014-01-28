@@ -4,7 +4,7 @@ py-pnr-status [![Stories in Ready](https://badge.waffle.io/vivekchand/py-pnr-sta
 Usage:
 ------
 ```
-python pnr_status.py <pnr-no> [retry interval in minutes]
+python pnr_status.py <pnr-no> [retry interval in minutes] [-email=yourname@gmail.com]
 
 Example:
 --------
