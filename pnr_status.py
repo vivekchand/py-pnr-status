@@ -22,8 +22,6 @@ def sendEmail(pnr,Message,emailId,passw):
     except smtplib.SMTPAuthenticationError, e:
         server.quit()
         print 'Invalid email or password'
-        emailId = ''
-        passw = ''
 
 def get_pnr_status(argv):
     if len(argv) < 2:
