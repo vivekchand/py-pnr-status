@@ -7,16 +7,13 @@ import getpass
 default_retry_interval = 10*60 #10 min
 
 def sendEmail(server,pnr,Message,emailId):
-    try:
-        subject = 'PNR Status %s' % pnr
-        msg = 'Subject: %s\n\n%s' % (subject, Message)
-        fromaddr=emailId
-        toaddrs=emailId
-        print 'sending mail ...'
-        server.sendmail(fromaddr, toaddrs, msg)
-        print 'sent :)'
-    except smtplib.SMTPAuthenticationError, e:
-        print 'Invalid email or password'
+    subject = 'PNR Status %s' % pnr
+    msg = 'Subject: %s\n\n%s' % (subject, Message)
+    fromaddr=emailId
+    toaddrs=emailId
+    print 'sending mail ...'
+    server.sendmail(fromaddr, toaddrs, msg)
+    print 'sent :)'
 
 def get_pnr_status(argv):
     if len(argv) < 2:
@@ -35,7 +32,13 @@ def get_pnr_status(argv):
                 passw = getpass.getpass()
                 server = smtplib.SMTP('smtp.gmail.com:587')
                 server.starttls()
-                server.login(emailId,passw)
+                try:
+                    server.login(emailId,passw)
+                except smtplib.SMTPAuthenticationError, e:
+                    print 'Invalid email or password'
+                    emailId = ''
+                    passw = ''
+
             elif extarg[0] == '-retry_interval':
                 retry_interval = int(extarg[1])*60
 
