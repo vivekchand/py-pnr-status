@@ -6,21 +6,15 @@ import smtplib
 import getpass
 default_retry_interval = 10*60 #10 min
 
-def sendEmail(pnr,Message,emailId,passw):
+def sendEmail(server,pnr,Message,emailId):
     try:
         subject = 'PNR Status %s' % pnr
         msg = 'Subject: %s\n\n%s' % (subject, Message)
         fromaddr=emailId
         toaddrs=emailId
-        password=passw
-        # The actual mail to be sent
-        server = smtplib.SMTP('smtp.gmail.com:587')
-        server.starttls()
-        server.login(fromaddr,password)
         print 'sending mail ...'
         server.sendmail(fromaddr, toaddrs, msg)
         print 'sent :)'
-        server.quit()
     except smtplib.SMTPAuthenticationError, e:
         print 'Invalid email or password'
 
@@ -39,6 +33,9 @@ def get_pnr_status(argv):
             if extarg[0] == '-email':
                 emailId = extarg[1]
                 passw = getpass.getpass()
+                server = smtplib.SMTP('smtp.gmail.com:587')
+                server.starttls()
+                server.login(emailId,passw)
             elif extarg[0] == '-retry_interval':
                 retry_interval = int(extarg[1])*60
 
@@ -96,7 +93,7 @@ def get_pnr_status(argv):
         if(emailId!=''):
             emailMsg = get_current_status(passengers)
             pnr = data['pnr_number']
-            sendEmail(pnr,emailMsg,emailId,passw)
+            sendEmail(server,pnr,emailMsg,emailId)
         time.sleep(retry_interval)
 
     if data['chart_prepared']:
@@ -107,11 +104,12 @@ def get_pnr_status(argv):
 
     passengers = data['passenger']
     print_current_status(passengers)
+    server.quit()
 
     if(emailId!=''):
         emailMsg = get_current_status(passengers)
         pnr = data['pnr_number']
-        sendEmail(pnr,emailMsg,emailId,passw)
+        sendEmail(server,pnr,emailMsg,emailId)
 
 
 get_pnr_status(sys.argv)
