@@ -6,14 +6,24 @@ import smtplib
 import getpass
 default_retry_interval = 10*60 #10 min
 
-def sendEmail(server,pnr,Message,emailId):
+def sendEmail(pnr,Message,emailId,passw):
     subject = 'PNR Status %s' % pnr
     msg = 'Subject: %s\n\n%s' % (subject, Message)
     fromaddr=emailId
     toaddrs=emailId
-    print 'sending mail ...'
-    server.sendmail(fromaddr, toaddrs, msg)
-    print 'sent :)'
+    try:
+        print 'sending mail ...'
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.starttls()
+        server.login(emailId,passw)
+        server.sendmail(fromaddr, toaddrs, msg)
+        server.quit()
+        print 'sent :)'
+    except smtplib.SMTPAuthenticationError, e:
+        server.quit()
+        print 'Invalid email or password'
+        emailId = ''
+        passw = ''
 
 def get_pnr_status(argv):
     if len(argv) < 2:
@@ -30,15 +40,6 @@ def get_pnr_status(argv):
             if extarg[0] == '-email':
                 emailId = extarg[1]
                 passw = getpass.getpass()
-                server = smtplib.SMTP('smtp.gmail.com:587')
-                server.starttls()
-                try:
-                    server.login(emailId,passw)
-                except smtplib.SMTPAuthenticationError, e:
-                    print 'Invalid email or password'
-                    emailId = ''
-                    passw = ''
-
             elif extarg[0] == '-retry_interval':
                 retry_interval = int(extarg[1])*60
 
@@ -96,7 +97,7 @@ def get_pnr_status(argv):
         if(emailId!=''):
             emailMsg = get_current_status(passengers)
             pnr = data['pnr_number']
-            sendEmail(server,pnr,emailMsg,emailId)
+            sendEmail(pnr,emailMsg,emailId,passw)
         time.sleep(retry_interval)
 
     if data['chart_prepared']:
@@ -111,8 +112,7 @@ def get_pnr_status(argv):
     if(emailId!=''):
         emailMsg = get_current_status(passengers)
         pnr = data['pnr_number']
-        sendEmail(server,pnr,emailMsg,emailId)
-        server.quit()
+        sendEmail(pnr,emailMsg,emailId,passw)
 
 
 get_pnr_status(sys.argv)
