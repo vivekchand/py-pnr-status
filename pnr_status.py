@@ -26,23 +26,21 @@ def sendEmail(pnr,Message,emailId,passw):
 
 def get_pnr_status(argv):
     if len(argv) < 2:
-        print 'Usage: python pnr_status.py <pnr-no> [retry interval in min]'
+        print 'Usage: python pnr_status.py <pnr-no> [-retry_interval=60] [-email=yourname@gmail.com]'
         return
 
-    if len(argv) == 3:
-        retry_interval = int(argv[2])*60
-    else:
-        retry_interval = default_retry_interval
+    emailId = ''
+    passw = ''
+    retry_interval = default_retry_interval
 
-    if len(argv) > 3:
-        for arg in argv[3:]:
+    if len(argv) >= 3:
+        for arg in argv[2:]:
             extarg = arg.split('=')
             if extarg[0] == '-email':
                 emailId = extarg[1]
                 passw = getpass.getpass()
-            else:
-                emailId = ''
-                passw = ''
+            elif extarg[0] == '-retry_interval':
+                retry_interval = int(extarg[1])*60
 
     pnr_no = argv[1]
     print 'Checking PNR Status ...'
