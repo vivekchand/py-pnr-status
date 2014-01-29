@@ -104,12 +104,12 @@ def get_pnr_status(argv):
 
     passengers = data['passenger']
     print_current_status(passengers)
-    server.quit()
 
     if(emailId!=''):
         emailMsg = get_current_status(passengers)
         pnr = data['pnr_number']
         sendEmail(server,pnr,emailMsg,emailId)
+        server.quit()
 
 
 get_pnr_status(sys.argv)
