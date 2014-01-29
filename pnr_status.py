@@ -6,9 +6,9 @@ import smtplib
 import getpass
 default_retry_interval = 10*60 #10 min
 
-def sendEmail(Message,emailId,passw):
+def sendEmail(pnr,Message,emailId,passw):
     try:
-        subject = 'PNR Status'
+        subject = 'PNR Status %s' % pnr
         msg = 'Subject: %s\n\n%s' % (subject, Message)
 
         fromaddr=emailId
@@ -88,11 +88,12 @@ def get_pnr_status(argv,emailId,pas):
         print 'Not confirmed yet ..'
         print 'Current status: '
         print_current_status(passengers)
-        print 'Trying again after time interval of %s sec' % retry_interval
-        time.sleep(retry_interval)
+        print 'Trying again after time interval of %s min' % (int(retry_interval)/60.0)
         if(emailId!=''):
             emailMsg = get_current_status(passengers)
-            sendEmail(emailMsg,emailId,passw)
+            pnr = data['pnr_number']
+            sendEmail(pnr,emailMsg,emailId,passw)
+        time.sleep(retry_interval)
 
     if data['chart_prepared']:
         print 'Chart Prepared! PNR Status:'
@@ -105,7 +106,8 @@ def get_pnr_status(argv,emailId,pas):
 
     if(emailId!=''):
         emailMsg = get_current_status(passengers)
-        sendEmail(emailMsg,emailId,passw)
+        pnr = data['pnr_number']
+        sendEmail(pnr,emailMsg,emailId,passw)
 
 
 emailId=''
