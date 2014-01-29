@@ -10,13 +10,9 @@ def sendEmail(pnr,Message,emailId,passw):
     try:
         subject = 'PNR Status %s' % pnr
         msg = 'Subject: %s\n\n%s' % (subject, Message)
-
         fromaddr=emailId
         toaddrs=emailId
-
-        # Credentials (if needed)
         password=passw
-
         # The actual mail to be sent
         server = smtplib.SMTP('smtp.gmail.com:587')
         server.starttls()
@@ -28,7 +24,7 @@ def sendEmail(pnr,Message,emailId,passw):
     except smtplib.SMTPAuthenticationError, e:
         print 'Invalid email or password'
 
-def get_pnr_status(argv,emailId,pas):
+def get_pnr_status(argv):
     if len(argv) < 2:
         print 'Usage: python pnr_status.py <pnr-no> [retry interval in min]'
         return
@@ -37,6 +33,16 @@ def get_pnr_status(argv,emailId,pas):
         retry_interval = int(argv[2])*60
     else:
         retry_interval = default_retry_interval
+
+    if len(argv) > 3:
+        for arg in argv[3:]:
+            extarg = arg.split('=')
+            if extarg[0] == '-email':
+                emailId = extarg[1]
+                passw = getpass.getpass()
+            else:
+                emailId = ''
+                passw = ''
 
     pnr_no = argv[1]
     print 'Checking PNR Status ...'
@@ -70,8 +76,8 @@ def get_pnr_status(argv,emailId,pas):
         temp=''
         i = 1
         for passenger in passengers:
-            temp = temp+ 'Passenger %s ' % i +'\n' + 'Current Status: ' +'\n'+passenger['status'] +'\n'+ 'Seat Number:' + passenger['seat_number']+'\n'
-            temp = temp + '------------'+'\n'
+            temp = temp+ 'Passenger %s ' % i +'\n' + 'Current Status: ' + passenger['status']
+            temp = temp +'\n'+ 'Seat Number:' + passenger['seat_number']+'\n\n'
             i+=1
         return temp
 
@@ -110,13 +116,5 @@ def get_pnr_status(argv,emailId,pas):
         sendEmail(pnr,emailMsg,emailId,passw)
 
 
-emailId=''
-passw=''
-
-if(len(sys.argv)>=4):
-    temp=sys.argv[3]
-    emailId=temp[7:]
-    passw=getpass.getpass()
-
-get_pnr_status(sys.argv,emailId,passw)
+get_pnr_status(sys.argv)
 
