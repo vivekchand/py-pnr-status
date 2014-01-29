@@ -43,7 +43,7 @@ def get_pnr_status(argv):
                 retry_interval = int(extarg[1])*60
 
     pnr_no = argv[1]
-    print 'Checking PNR Status ...'
+    print '\nChecking PNR Status ...'
     resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
     resp = json.loads(resp.content)
     status = resp['status']
