@@ -4,23 +4,34 @@ py-pnr-status [![Stories in Ready](https://badge.waffle.io/vivekchand/py-pnr-sta
 Usage:
 ------
 ```
-python pnr_status.py <pnr-no> [retry interval in minutes] [-email=yourname@gmail.com]
+python pnr_status.py <pnr-no> [-retry_interval=60] [-email=yourname@gmail.com]
+
+Arguments:
+----------
+-retry_interval => retry interval in minutes
+-email => email address you want to get notified, 
+          You will have to give your email password in next step.
 
 Example:
 --------
-python pnr_status.py 4159198222 10
+python pnr_status.py 4813108954 -retry_interval=90 -email=vivekchand19@gmail.com 
+Password: 
 
-Sample Output:
---------------
 Checking PNR Status ...
-CONFIRMED! PNR Status:
-PNR No.:4159198222
+Not confirmed yet ..
+Current status: 
 Passenger 1 
-Current Status: CNF
-Seat Number:S2 , 48,GN
+Current Status: W/L  53
+Seat Number:W/L  78,GNWL
 Passenger 2 
-Current Status: CNF
-Seat Number:S2 , 44,GN
+Current Status: W/L  54
+Seat Number:W/L  79,GNWL
+Passenger 3 
+Current Status: W/L  55
+Seat Number:W/L  80,GNWL
+Trying again after time interval of 90.0 min
+sending mail ...
+sent :)
 ```
 
 Todo:
