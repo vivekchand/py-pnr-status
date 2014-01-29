@@ -36,7 +36,7 @@ sent :)
 
 Todo:
 -----
-1. Send notification via email / sms when confirmed
+1. Send notification via sms when confirmed
 2. Web App of py-pnr-status ( https://github.com/vivekchand/pypnrstatus.in )
 3. Make py-pnr-status easier to use (Installable)
 
