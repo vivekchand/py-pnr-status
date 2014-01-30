@@ -88,7 +88,7 @@ def get_pnr_status(argv):
         passengers = data['passenger']
         if check_if_passengers_cnf(passengers):
             break
-        print 'Not confirmed yet ..'
+        print '\nNot confirmed yet ..'
         print 'Current status: '
         print_current_status(passengers)
         print 'Trying again after time interval of %s min' % (int(retry_interval)/60.0)
