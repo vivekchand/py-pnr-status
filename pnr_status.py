@@ -5,6 +5,12 @@ import time
 import smtplib
 import getpass
 default_retry_interval = 10*60 #10 min
+from BeautifulSoup import BeautifulSoup
+
+def stripAllTags( html ):
+    if html is None:
+       return None
+    return ''.join( BeautifulSoup( html ).findAll( text = True ) )
 
 def sendEmail(pnr,Message,emailId,passw):
     subject = 'PNR Status %s' % pnr
@@ -43,17 +49,13 @@ def get_pnr_status(argv):
 
     pnr_no = argv[1]
     print '\nChecking PNR Status ...'
-    resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
+    resp = requests.get('http://pnrwala.com/pnr2.php?pnr=%s'%pnr_no)
     resp = json.loads(resp.content)
-    status = resp['status']
-    data = resp['data']
-    if data == {} and status == 'OK':
+
+    if resp.get('response code'):
         print 'Something went wrong real bad! Try again Later :)'
         return
 
-    if status == "INVALID":
-        print 'Invalid PNR Number!'
-        return
 
     def check_if_passengers_cnf(passengers):
         for passenger in passengers:
@@ -69,6 +71,12 @@ def get_pnr_status(argv):
             print 'Seat Number:' + passenger['seat_number']
             i+=1
 
+    def _map_passenger(passenger):
+        return {
+                'seat_number': stripAllTags(passenger['Booking Status ']).strip(),
+                'status': stripAllTags(passenger['* Current Status ']).strip()
+        }
+
     def get_current_status(passengers):
         temp=''
         i = 1
@@ -78,14 +86,15 @@ def get_pnr_status(argv):
             i+=1
         return temp
 
-    while not data['chart_prepared']:
-        resp = requests.get('http://pnrapi.alagu.net/api/v1.0/pnr/%s'%pnr_no)
+    while not stripAllTags(resp.get('Charting Status')).strip() == 'CHART PREPARED':
+    	resp = requests.get('http://pnrwala.com/pnr2.php?pnr=%s'%pnr_no)
         resp = json.loads(resp.content)
-        status = resp['status']
-        if status != 'OK':
-            continue
-        data = resp['data']
-        passengers = data['passenger']
+
+	if resp.get('response code'):
+	   continue
+
+        passengers = [_map_passenger(resp[key]) for key in resp.keys() if key.isdigit()]
+
         if check_if_passengers_cnf(passengers):
             break
         print '\nNot confirmed yet ..'
@@ -98,18 +107,18 @@ def get_pnr_status(argv):
             sendEmail(pnr,emailMsg,emailId,passw)
         time.sleep(retry_interval)
 
-    if data['chart_prepared']:
+    if stripAllTags(resp.get('Charting Status')).strip() == 'CHART PREPARED':
         print 'Chart Prepared! PNR Status:'
     else:
         print 'CONFIRMED! PNR Status:'
-    print 'PNR No.:' +data['pnr_number']
+    print 'PNR No.:' +pnr_no
 
-    passengers = data['passenger']
+    passengers = [_map_passenger(resp[key]) for key in resp.keys() if key.isdigit()]
     print_current_status(passengers)
 
     if(emailId!=''):
         emailMsg = get_current_status(passengers)
-        pnr = data['pnr_number']
+        pnr = pnr_no
         sendEmail(pnr,emailMsg,emailId,passw)
 
 
